@@ -3,7 +3,6 @@ import yt_dlp
 import os
 import base64
 
-
 def descargar_mp3(url, output_path):
     opciones = {
         'format': 'bestaudio/best',
@@ -12,7 +11,9 @@ def descargar_mp3(url, output_path):
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
             'preferredquality': '192',
+            'nopostoverwrites': False,  # Permite sobrescribir archivos si ya existen
         }],
+        'ffmpeg_location': 'bin/ffmpeg.exe',  # Ruta al binario de FFmpeg
     }
     
     with yt_dlp.YoutubeDL(opciones) as ydl:

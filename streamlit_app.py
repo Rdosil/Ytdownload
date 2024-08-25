@@ -13,7 +13,7 @@ def descargar_mp3(url, output_path):
             'preferredquality': '192',
             'nopostoverwrites': False,  # Permite sobrescribir archivos si ya existen
         }],
-        'ffmpeg_location': 'bin/ffmpeg.exe',  # Ruta al binario de FFmpeg
+        'ffmpeg_location': './bin/ffmpeg.exe',  # Ruta al binario de FFmpeg
     }
     
     with yt_dlp.YoutubeDL(opciones) as ydl:

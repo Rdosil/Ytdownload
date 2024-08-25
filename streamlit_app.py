@@ -2,29 +2,24 @@ import streamlit as st
 import yt_dlp
 import os
 import base64
-import ffmpeg
+
 
 def descargar_mp3(url, output_path):
     opciones = {
         'format': 'bestaudio/best',
         'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
     }
     
     with yt_dlp.YoutubeDL(opciones) as ydl:
         info = ydl.extract_info(url, download=True)
-        archivo_original = ydl.prepare_filename(info)
-        nombre_base = os.path.splitext(archivo_original)[0]
-        archivo_mp3 = f"{nombre_base}.mp3"
-        
-        # Convertir a MP3 usando python-ffmpeg
-        stream = ffmpeg.input(archivo_original)
-        stream = ffmpeg.output(stream, archivo_mp3, acodec='libmp3lame', audio_bitrate='192k')
-        ffmpeg.run(stream, overwrite_output=True)
-        
-        # Eliminar el archivo original
-        os.remove(archivo_original)
-        
-        return os.path.basename(archivo_mp3)
+        archivo_mp3 = ydl.prepare_filename(info).rsplit(".", 1)[0] + ".mp3"
+    
+    return os.path.basename(archivo_mp3)
 
 def get_binary_file_downloader_html(bin_file, file_label='File'):
     with open(bin_file, 'rb') as f:
